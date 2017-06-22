@@ -80,7 +80,7 @@ public class Grupo {
         Double media = calcularMedia(valoresBrutos);
         
         Double desvioPadrao = Math.sqrt(calcularVariancia(valoresBrutos,media));
-
+        
         for(Integer i : valoresBrutos){
             
             valoresNormalizados.add( 1/(1+Math.exp(-1*calcularZScore(i, media, desvioPadrao))));
