@@ -40,7 +40,7 @@ public class Extrator {
                     
                 }
                 
-                grupos.add(new Grupo(new ArrayList<Entidade>(grupo)));
+                grupos.add(new Grupo(diretorioGrupo.getName(),new ArrayList<Entidade>(grupo)));
                 
                 grupo.clear();
             }

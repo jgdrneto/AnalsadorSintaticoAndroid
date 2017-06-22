@@ -7,6 +7,7 @@ public class Metodo{
     
     public String nome;
     String retorno;
+    String encapsulamento;
     boolean abstrato;
     boolean efinal;
     
@@ -14,9 +15,10 @@ public class Metodo{
     
     List<String> conteudo;
     
-    public Metodo(String nome, String retorno, boolean abstrato, boolean eFinal) {
+    public Metodo(String nome, String retorno,String encapsulamento, boolean abstrato, boolean eFinal) {
         this.nome = nome;
         this.retorno = retorno;
+        this.encapsulamento = encapsulamento;
         this.abstrato = abstrato;
         this.parametros = new ArrayList<Parametro>();
         this.conteudo = new ArrayList<String>();
@@ -28,6 +30,14 @@ public class Metodo{
 
     public void setConteudo(List<String> conteudo) {
         this.conteudo = conteudo;
+    }
+    
+    public String getEncapsulamento() {
+        return encapsulamento;
+    }
+
+    public void setEncapsulamento(String encapsulamento) {
+        this.encapsulamento = encapsulamento;
     }
 
     public boolean isAbstrato() {

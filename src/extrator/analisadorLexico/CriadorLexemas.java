@@ -24,16 +24,27 @@ public class CriadorLexemas {
                 while(s.startsWith(" ")){
                     s=s.substring(1);
                 }
-                
+                                
                 //Excluir comentário em posições diferentes
                 if(s.contains("//")){
+                    
+                    String comentario="";
+                    
+                    if(s.contains("*/")){
+                        comentario="*/";
+                    }
+                    
                     s=s.substring(0, s.indexOf("//"));
+                    s+=comentario;
                 }
+                
                 //Excluir comentarios no começo da linha
-                if(!s.startsWith("//")){
+                if(!s.startsWith("//") && !s.startsWith("@")){
                     lexemas.addAll(quebrarString(s));
                 }
-
+                
+                
+                
             }
             
             br.close();

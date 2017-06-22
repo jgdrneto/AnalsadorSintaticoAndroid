@@ -1,6 +1,5 @@
 package extrator.analisadorSintatico;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +65,7 @@ public class AnalisadorSintatico{
     
     private Entidade entidade(List<String> fita) {
         
-        System.out.println(fita.toString());
+        //System.out.println(fita.toString());
         
         Entidade e = null;
         String encapsulamento="defaut";
@@ -78,6 +77,16 @@ public class AnalisadorSintatico{
             
             String tipo = fita.remove(0);
             
+            /*
+            System.out.println("FITA:" + fita);
+            
+            try {
+                System.in.read();
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+            */
             switch(tipo){
                 case "public":
                 case "private":
@@ -86,18 +95,21 @@ public class AnalisadorSintatico{
                 break;
                 case "final":
                     entFinal = true;
-                break;    
+                break;
                 case "abstract":
+                    
+                    //System.out.println("ENTROU ABSTRATA");
+                    
                     abstrata=true;
                 break;
                 case "static":
                     estatica = true;
                 break;    
                 case "class":
-                   e = definirEntidade(new Classe(encapsulamento,abstrata, entFinal,estatica),fita);
+                   e = definirEntidade(new Classe(encapsulamento,entFinal,abstrata,estatica),fita);
                 break;    
                 case "interface":
-                    e = definirEntidade(new Interface(encapsulamento,abstrata, entFinal),fita);
+                    e = definirEntidade(new Interface(encapsulamento,entFinal,abstrata),fita);
                 break;
             }
 
@@ -109,21 +121,50 @@ public class AnalisadorSintatico{
     
     private Entidade definirEntidade(Entidade entidade, List<String> fita) {
         
+        //System.out.println("Fita entrando na entidade:" + fita);
+        
         if(!fita.isEmpty()){
 
             while(!fita.isEmpty() && !fita.get(0).equals("{")){
+                
                 String al = fita.remove(0);
                 
                 switch(al){ 
                     case "extends":
                         if(!fita.isEmpty()){
-                            entidade.setPai(fita.remove(0));
+                            
+                            //System.out.println("Entra no pai");
+                            
+                            entidade.setPai(interpretarExtends(fita));
                         }
                     break;
                     case "implements":
                         entidade.setNomesInterfacesImp(interfacesClasse(fita));
                     break;
                     default:
+                        
+                        if(al.contains("<")){
+                            
+                            String nome;
+                            
+                            int maiorMenor=1;
+                            
+                            while(!fita.isEmpty() && maiorMenor!=0 && !fita.get(0).equals("{")){
+                                
+                                nome = fita.remove(0);
+                                
+                                if(nome.contains("<")){
+                                    maiorMenor++;
+                                }else{
+                                    if(nome.contains(">")){
+                                        maiorMenor--;
+                                    }
+                                }
+                                
+                                al+=nome;
+                            }
+                                         
+                        }
                         entidade.setNome(al);
                     break;    
                 }
@@ -153,12 +194,26 @@ public class AnalisadorSintatico{
         
     }
     
+    private String interpretarExtends(List<String> fita) {
+        
+        String pai="";
+        
+        while(!fita.isEmpty() && !fita.get(0).equals("implements") && !fita.get(0).equals("{")){
+            pai+=fita.remove(0);
+        }
+        
+        return pai;
+        
+    }
+
     private void interpretarComando(Entidade entidade, List<String> nLexemas) {
         
         String encapsulamento="default";
         boolean entFinal=false;
         boolean abstrata = false;
         boolean estatica = false;
+        //boolean volatil = false;
+        //boolean transiente = false;
         
         while(!nLexemas.isEmpty() && !(nLexemas.size()==1 && nLexemas.get(0).equals("}")) && !(nLexemas.size()==1 && nLexemas.get(0).equals(";"))){
             
@@ -173,6 +228,12 @@ public class AnalisadorSintatico{
                 case "final":
                     entFinal = true;
                 break;
+                case "volatile":
+                    //volatil = true;
+                break;
+                case "transient":
+                    //transiente = true;
+                break;    
                 case "static":
                     estatica = true;
                 break; 
@@ -213,6 +274,8 @@ public class AnalisadorSintatico{
             
         }
          
+        //System.out.println("Campos:" + campos);
+        
         //System.out.println("Fita Termino: "+ nLexemas);
         
         //System.out.println("Cabeçote: "+ nLexemas.get(0));
@@ -224,10 +287,16 @@ public class AnalisadorSintatico{
                 
                 if(campos.size()==1){
                 
-                    m = new Metodo(campos.get(0),campos.get(0),abstrata,entFinal);
+                    m = new Metodo(campos.get(0),campos.get(0),encapsulamento,abstrata,entFinal);
                 }else{
                     
-                    m = new Metodo(campos.get(1),campos.get(0),abstrata,entFinal);
+                    String tipo="";
+                    
+                    for(int i=0;i<campos.size()-1;i++){
+                        tipo+=campos.get(i);
+                    }
+                    
+                    m = new Metodo(campos.get(campos.size()-1),tipo,encapsulamento,abstrata,entFinal);
                 }
                 
                 //System.out.println("Fita antes de interpretar parametros: "+ nLexemas);
@@ -245,8 +314,16 @@ public class AnalisadorSintatico{
                 entidade.getMetodos().add(m);                
             break;
             case "=":
-               
-                Atributo a = new Atributo(campos.get(0),campos.get(1),setValorAtributo(nLexemas));
+                
+                String tipo="";
+                
+                for(int i=0;i<campos.size()-1;i++){
+                    tipo+=campos.get(i);
+                }
+                
+                Atributo a = new Atributo(tipo,campos.get(campos.size()-1),setValorAtributo(nLexemas),encapsulamento,estatica,entFinal);
+                
+                //System.out.println("Fita depois do atributo:" + nLexemas);
                 
                 Classe c = (Classe)entidade;
                 
@@ -257,7 +334,7 @@ public class AnalisadorSintatico{
                 
                 //System.out.println("Fita: "+ nLexemas);
                 
-                Atributo an = new Atributo(campos.get(0),campos.get(1),"nulo");
+                Atributo an = new Atributo(campos.get(0),campos.get(1),"nulo",encapsulamento,estatica,entFinal);
                 
                 Classe cn = (Classe)entidade;
                 
@@ -362,15 +439,12 @@ public class AnalisadorSintatico{
         int contChave=0;
         
         while(!fita.isEmpty() && !(fita.size()==1 && fita.get(0).equals("}"))){
-            
-            //System.out.println("Fita: " + fita);
-            
-            
             /*
+            System.out.println("Fita: " + fita);
+              
             try {
                 System.in.read();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             */
@@ -408,7 +482,7 @@ public class AnalisadorSintatico{
                 case "/":
                     
                     if(!fita.isEmpty() && (fita.get(0).equals("/") || fita.get(0).equals("*"))){
-                        comando.remove(0);
+                        comando.remove(comando.size()-1);
                         comentario(fita);
                     }
                     
@@ -459,6 +533,8 @@ public class AnalisadorSintatico{
         
         String terminoDeComentario="";
         
+        //System.out.println("Fita entrando no comentario:" + fita);
+        
         while(!fita.isEmpty() && (!terminoDeComentario.equals("*/"))){
             
             String s = fita.remove(0);
@@ -473,8 +549,9 @@ public class AnalisadorSintatico{
                 System.out.println("Termino de comentario: "+ terminoDeComentario);
             } 
             */
-            
         }    
+        
+        //System.out.println("Fita apos comentario:" + fita);
     }
 
 }
