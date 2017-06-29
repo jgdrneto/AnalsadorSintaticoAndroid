@@ -6,23 +6,23 @@ import java.util.List;
 
 public class Grupo {
     
-    String nome;
+    private String nome;
     
-    List<Entidade> entidades;
+    private List<Entidade> entidades;
     
-    int numAtributos;
-    int numMetodos;
-    int numInterfacesImplementadas;
-    int numReferenciasEntreGrupo; 
-    int numSubClasses;
-    int numSubInterfaces;
-    int numEntAbstrata;
-    int numMetodosPublicos;
-    int numMetodosPrivados;
-    int numAtributosPublicos;
-    int numAtributosPrivados;
-    int numMetodosVoid;
-    int numMetodosNaoVoid;
+    private int numAtributos;
+    private int numMetodos;
+    private int numInterfacesImplementadas;
+    private int numReferenciasEntreGrupo; 
+    private int numSubClasses;
+    private int numSubInterfaces;
+    private int numEntAbstrata;
+    private int numMetodosPublicos;
+    private int numMetodosPrivados;
+    private int numAtributosPublicos;
+    private int numAtributosPrivados;
+    private int numMetodosVoid;
+    private int numMetodosNaoVoid;
         
     public Grupo(String nNome,List<Entidade> nEntidades){
         

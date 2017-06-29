@@ -5,11 +5,11 @@ import java.util.List;
 
 public class Metodo{
     
-    public String nome;
-    String retorno;
-    String encapsulamento;
-    boolean abstrato;
-    boolean efinal;
+    private String nome;
+    private String retorno;
+    private String encapsulamento;
+    private boolean abstrato;
+    private boolean efinal;
     
     List<Parametro> parametros;
     

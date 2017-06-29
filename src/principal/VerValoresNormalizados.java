@@ -15,7 +15,7 @@ public class VerValoresNormalizados {
             
                 System.out.println("Nome:" + g.getNome());
                 System.out.println(g.atributosParaList());
-                //System.out.println(g.getListNormalizacaoMaxMinEqual());
+                System.out.println(g.getListNormalizacaoMaxMinEqual());
                 System.out.println(g.getListNormalizacaoSigmoidal());
             }
         }

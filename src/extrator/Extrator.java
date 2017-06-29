@@ -11,9 +11,9 @@ import extrator.entidades.Grupo;
 
 public class Extrator {
     
-    List<Grupo> grupos;
-    CriadorLexemas analisadorLexico;
-    AnalisadorSintatico analisadorSintatico;
+    private List<Grupo> grupos;
+    private CriadorLexemas analisadorLexico;
+    private AnalisadorSintatico analisadorSintatico;
     
     public Extrator(String nomeDiretorioRaiz){
         

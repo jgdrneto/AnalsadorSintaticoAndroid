@@ -180,13 +180,13 @@ public class AnalisadorSintatico{
             
             for(int i=0;i<entidade.getComandos().size();i++){
                 
-                System.out.println("=========================================================");
+                //System.out.println("=========================================================");
                 
-                System.out.println("Comando: " + entidade.getComandos().get(i).toString());
+                //System.out.println("Comando: " + entidade.getComandos().get(i).toString());
                 
                 interpretarComando(entidade,entidade.getComandos().get(i));
                  
-                System.out.println("=========================================================");
+                //System.out.println("=========================================================");
             }
         }
         

@@ -1,8 +1,8 @@
 package extrator.entidades;
 
 public class Parametro {
-    String tipo;
-    String nome;
+    private String tipo;
+    private String nome;
     
     
     public Parametro(String tipo, String nome) {
